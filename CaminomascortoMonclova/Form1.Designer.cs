@@ -30,12 +30,13 @@
         {
             cmbCityoforigin = new ComboBox();
             cmbDestinationcity = new ComboBox();
-            btncalculate = new Button();
+            btnCalculateShortest = new Button();
             txtresult = new TextBox();
             picMap = new PictureBox();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
+            btnCalculateLongest = new Button();
             ((System.ComponentModel.ISupportInitialize)picMap).BeginInit();
             SuspendLayout();
             // 
@@ -55,19 +56,18 @@
             cmbDestinationcity.Size = new Size(247, 28);
             cmbDestinationcity.TabIndex = 1;
             // 
-            // btncalculate
+            // btnCalculateShortest
             // 
-            btncalculate.Location = new Point(34, 203);
-            btncalculate.Name = "btncalculate";
-            btncalculate.Size = new Size(183, 47);
-            btncalculate.TabIndex = 2;
-            btncalculate.Text = "Calculate";
-            btncalculate.UseVisualStyleBackColor = true;
-            btncalculate.Click += btncalculate_Click;
+            btnCalculateShortest.Location = new Point(34, 203);
+            btnCalculateShortest.Name = "btnCalculateShortest";
+            btnCalculateShortest.Size = new Size(183, 63);
+            btnCalculateShortest.TabIndex = 2;
+            btnCalculateShortest.Text = "Calculate Shortest";
+            btnCalculateShortest.UseVisualStyleBackColor = true;
             // 
             // txtresult
             // 
-            txtresult.Location = new Point(12, 317);
+            txtresult.Location = new Point(12, 464);
             txtresult.Multiline = true;
             txtresult.Name = "txtresult";
             txtresult.Size = new Size(302, 72);
@@ -102,23 +102,33 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(104, 285);
+            label3.Location = new Point(115, 441);
             label3.Name = "label3";
             label3.Size = new Size(85, 20);
             label3.TabIndex = 7;
             label3.Text = "Description";
+            // 
+            // btnCalculateLongest
+            // 
+            btnCalculateLongest.Location = new Point(34, 272);
+            btnCalculateLongest.Name = "btnCalculateLongest";
+            btnCalculateLongest.Size = new Size(183, 58);
+            btnCalculateLongest.TabIndex = 8;
+            btnCalculateLongest.Text = "Calculate Longest";
+            btnCalculateLongest.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1097, 687);
+            Controls.Add(btnCalculateLongest);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(picMap);
             Controls.Add(txtresult);
-            Controls.Add(btncalculate);
+            Controls.Add(btnCalculateShortest);
             Controls.Add(cmbDestinationcity);
             Controls.Add(cmbCityoforigin);
             Name = "Form1";
@@ -132,11 +142,12 @@
 
         private ComboBox cmbCityoforigin;
         private ComboBox cmbDestinationcity;
-        private Button btncalculate;
+        private Button btnCalculateShortest;
         private TextBox txtresult;
         private PictureBox picMap;
         private Label label1;
         private Label label2;
         private Label label3;
+        private Button btnCalculateLongest;
     }
 }
