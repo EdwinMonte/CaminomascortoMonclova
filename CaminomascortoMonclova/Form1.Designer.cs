@@ -32,12 +32,11 @@
             cmbDestinationcity = new ComboBox();
             btnCalculateShortest = new Button();
             txtresult = new TextBox();
-            picMap = new PictureBox();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             btnCalculateLongest = new Button();
-            ((System.ComponentModel.ISupportInitialize)picMap).BeginInit();
+            panelMap = new Panel();
             SuspendLayout();
             // 
             // cmbCityoforigin
@@ -70,16 +69,8 @@
             txtresult.Location = new Point(12, 464);
             txtresult.Multiline = true;
             txtresult.Name = "txtresult";
-            txtresult.Size = new Size(302, 72);
+            txtresult.Size = new Size(275, 72);
             txtresult.TabIndex = 3;
-            // 
-            // picMap
-            // 
-            picMap.Location = new Point(320, 45);
-            picMap.Name = "picMap";
-            picMap.Size = new Size(748, 584);
-            picMap.TabIndex = 4;
-            picMap.TabStop = false;
             // 
             // label1
             // 
@@ -102,7 +93,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(115, 441);
+            label3.Location = new Point(79, 441);
             label3.Name = "label3";
             label3.Size = new Size(85, 20);
             label3.TabIndex = 7;
@@ -117,23 +108,29 @@
             btnCalculateLongest.Text = "Calculate Longest";
             btnCalculateLongest.UseVisualStyleBackColor = true;
             // 
+            // panelMap
+            // 
+            panelMap.Location = new Point(293, 45);
+            panelMap.Name = "panelMap";
+            panelMap.Size = new Size(903, 769);
+            panelMap.TabIndex = 9;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1097, 687);
+            ClientSize = new Size(1225, 838);
+            Controls.Add(panelMap);
             Controls.Add(btnCalculateLongest);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(picMap);
             Controls.Add(txtresult);
             Controls.Add(btnCalculateShortest);
             Controls.Add(cmbDestinationcity);
             Controls.Add(cmbCityoforigin);
             Name = "Form1";
             Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)picMap).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -144,10 +141,10 @@
         private ComboBox cmbDestinationcity;
         private Button btnCalculateShortest;
         private TextBox txtresult;
-        private PictureBox picMap;
         private Label label1;
         private Label label2;
         private Label label3;
         private Button btnCalculateLongest;
+        private Panel panelMap;
     }
 }

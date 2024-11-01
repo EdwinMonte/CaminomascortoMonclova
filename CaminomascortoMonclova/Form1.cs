@@ -1,8 +1,10 @@
+using System.Drawing;
+
 namespace CaminomascortoMonclova
 {
     public partial class Form1 : Form
     {
-        Dictionary<string, Point> cityPositions;
+        private Dictionary<string, Point> cityPositions = new Dictionary<string, Point>();
         Dictionary<string, List<Tuple<string, int>>> graph;
         List<string> caminoMasCorto;
         List<string> caminoMasLargo;
@@ -15,7 +17,7 @@ namespace CaminomascortoMonclova
             InicializarMapa();
 
             // Configuramos el evento Paint
-            picMap.Paint += DibujarMapa;
+            panelMap.Paint += DibujarMapa;
 
             // Asignar eventos a los botones
             btnCalculateShortest.Click += btnCalculateShortest_Click;
@@ -26,7 +28,7 @@ namespace CaminomascortoMonclova
         {
             graph = new Dictionary<string, List<Tuple<string, int>>>()
     {
-        { "Monclova", new List<Tuple<string, int>>() { new Tuple<string, int>("Frontera", 7), new Tuple<string, int>("Castaños", 10), new Tuple<string, int>("Saltillo", 150), new Tuple<string, int>("Torreón", 220), new Tuple<string, int>("Sabinas", 110) } },
+        { "Monclova", new List<Tuple<string, int>>() { new Tuple<string, int>("Frontera", 7), new Tuple<string, int>("Castaños", 10), new Tuple<string, int>("Saltillo", 150), new Tuple<string, int>("Torreón", 220), new Tuple<string, int>("Sabinas", 110),new Tuple<string, int>("San Pedro" , 380) } },
         { "Frontera", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 7), new Tuple<string, int>("Castaños", 17), new Tuple<string, int>("Saltillo", 130), new Tuple<string, int>("Piedras Negras", 200) } },
         { "Castaños", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 10), new Tuple<string, int>("Frontera", 17), new Tuple<string, int>("Saltillo", 160) } },
         { "Saltillo", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 150), new Tuple<string, int>("Frontera", 130), new Tuple<string, int>("Castaños", 160), new Tuple<string, int>("Ramos Arizpe", 20), new Tuple<string, int>("Parras de la Fuente", 130) } },
@@ -38,43 +40,100 @@ namespace CaminomascortoMonclova
         { "Acuña", new List<Tuple<string, int>>() { new Tuple<string, int>("Piedras Negras", 90) } },
         { "San Pedro", new List<Tuple<string, int>>() { new Tuple<string, int>("Torreón", 50) } },
         { "Múzquiz", new List<Tuple<string, int>>() { new Tuple<string, int>("Sabinas", 70), new Tuple<string, int>("Nava", 80) } },
-        { "Nava", new List<Tuple<string, int>>() { new Tuple<string, int>("Múzquiz", 80) } }
+        { "Nava", new List<Tuple<string, int>>() { new Tuple<string, int>("Múzquiz", 80) } },
+        { "Allende", new List<Tuple<string, int>>() { new Tuple<string, int>("Nueva Rosita", 50), new Tuple<string, int>("Morelos", 40) } },
+        { "Morelos", new List<Tuple<string, int>>() { new Tuple<string, int>("Nueva Rosita", 60), new Tuple<string, int>("Allende", 40) } },
+        { "Villa Unión", new List<Tuple<string, int>>() { new Tuple<string, int>("General Cepeda", 30), new Tuple<string, int>("Arteaga", 40) } },
+        { "General Cepeda", new List<Tuple<string, int>>() { new Tuple<string, int>("Villa Unión", 30), new Tuple<string, int>("Arteaga", 20) } },
+        { "Arteaga", new List<Tuple<string, int>>() { new Tuple<string, int>("Villa Unión", 40), new Tuple<string, int>("General Cepeda", 20) } },
+        { "Matamoros", new List<Tuple<string, int>>() { new Tuple<string, int>("San Buenaventura", 50), new Tuple<string, int>("Viesca", 60) } },
+        { "San Buenaventura", new List<Tuple<string, int>>() { new Tuple<string, int>("Matamoros", 50), new Tuple<string, int>("Viesca", 40) } },
+        { "Viesca", new List<Tuple<string, int>>() { new Tuple<string, int>("Matamoros", 60), new Tuple<string, int>("San Buenaventura", 40) } },
+        { "Cuatro Ciénegas", new List<Tuple<string, int>>() { new Tuple<string, int>("Ocampo", 30), new Tuple<string, int>("Zaragoza", 40) } },
+        { "Ocampo", new List<Tuple<string, int>>() { new Tuple<string, int>("Cuatro Ciénegas", 30), new Tuple<string, int>("Zaragoza", 20) } },
+        { "Zaragoza", new List<Tuple<string, int>>() { new Tuple<string, int>("Cuatro Ciénegas", 40), new Tuple<string, int>("Ocampo", 20) } },
+        { "Hidalgo", new List<Tuple<string, int>>() { new Tuple<string, int>("Jiménez", 50), new Tuple<string, int>("Abasolo", 60) } },
+        { "Jiménez", new List<Tuple<string, int>>() { new Tuple<string, int>("Hidalgo", 50), new Tuple<string, int>("Abasolo", 40) } },
+        { "Abasolo", new List<Tuple<string, int>>() { new Tuple<string, int>("Hidalgo", 60), new Tuple<string, int>("Jiménez", 40) } },
+        { "Candela", new List<Tuple<string, int>>() { new Tuple<string, int>("Escobedo", 30), new Tuple<string, int>("Guerrero", 40) } },
+        { "Escobedo", new List<Tuple<string, int>>() { new Tuple<string, int>("Candela", 30), new Tuple<string, int>("Guerrero", 20) } },
+        { "Guerrero", new List<Tuple<string, int>>() { new Tuple<string, int>("Candela", 40), new Tuple<string, int>("Escobedo", 20) } },
+        { "Juárez", new List<Tuple<string, int>>() { new Tuple<string, int>("Lamadrid", 30), new Tuple<string, int>("Sacramento", 40) } },
+        { "Lamadrid", new List<Tuple<string, int>>() { new Tuple<string, int>("Juárez", 30), new Tuple<string, int>("Sacramento", 20) } },
+        { "Sacramento", new List<Tuple<string, int>>() { new Tuple<string, int>("Juárez", 40), new Tuple<string, int>("Lamadrid", 20) } },
+        { "Sierra Mojada", new List<Tuple<string, int>>() { new Tuple<string, int>("Progreso", 30), new Tuple<string, int>("Francisco I Madero", 40) } },
+        { "Progreso", new List<Tuple<string, int>>() { new Tuple<string, int>("Sierra Mojada", 30), new Tuple<string, int>("Francisco I Madero", 20) } },
+        { "Francisco I Madero", new List<Tuple<string, int>>() { new Tuple<string, int>("Sierra Mojada", 40), new Tuple<string, int>("Progreso", 20) } },
+        { "San Juan De Sabinas", new List<Tuple<string, int>>() { new Tuple<string, int>("Nadadores", 30) } },
+        { "Nadadores", new List<Tuple<string, int>>() { new Tuple<string, int>("San Juan De Sabinas", 30) } }
     };
         }
 
         private void InicializarMapa()
         {
-            cityPositions = new Dictionary<string, Point>
-    {
-        { "Monclova", new Point(150, 200) },
-        { "Frontera", new Point(250, 200) },
-        { "Castaños", new Point(150, 300) },
-        { "Saltillo", new Point(300, 400) },
-        { "Torreón", new Point(400, 250) },
-        { "Piedras Negras", new Point(100, 50) },
-        { "Ramos Arizpe", new Point(320, 380) },
-        { "Parras de la Fuente", new Point(350, 300) },
-        { "Sabinas", new Point(180, 100) },
-        { "Acuña", new Point(50, 70) },
-        { "San Pedro", new Point(380, 280) },
-        { "Múzquiz", new Point(160, 120) },
-        { "Nava", new Point(140, 140) }
-    };
+            cityPositions.Add("Acuña", new Point(560, 37));
+            cityPositions.Add("Jiménez", new Point(695, 50));
+            cityPositions.Add("Piedras Negras", new Point(750, 70));
+            cityPositions.Add("Zaragoza", new Point(580, 80));
+            cityPositions.Add("Nava", new Point(780, 110));
+            cityPositions.Add("Morelos", new Point(628, 125));
+            cityPositions.Add("Allende", new Point(720, 145));
+            cityPositions.Add("Villa Unión", new Point(710, 175));
+            cityPositions.Add("Guerrero", new Point(800, 160));
+            cityPositions.Add("Hidalgo", new Point(835, 185));
+            cityPositions.Add("Juárez", new Point(760, 210));
+            cityPositions.Add("Progreso", new Point(755, 245));
+            cityPositions.Add("Ocampo", new Point(370, 170));
+            cityPositions.Add("Sierra Mojada", new Point(350, 290));
+            cityPositions.Add("San Buenaventura", new Point(495, 340));
+            cityPositions.Add("Lamadrid", new Point(565, 230));
+            cityPositions.Add("Sacramento", new Point(385, 390));
+            cityPositions.Add("Cuatro Ciénegas", new Point(500, 250));
+            cityPositions.Add("Nadadores", new Point(515, 330));
+            cityPositions.Add("San Pedro", new Point(415, 430));
+            cityPositions.Add("Monclova", new Point(688, 310));
+            cityPositions.Add("Frontera", new Point(620, 305));
+            cityPositions.Add("Escobedo", new Point(680, 260));
+            cityPositions.Add("Abasolo", new Point(668, 280));
+            cityPositions.Add("Candela", new Point(770, 310));
+            cityPositions.Add("Sabinas", new Point(625, 180));
+            cityPositions.Add("Múzquiz", new Point(540, 120));
+            cityPositions.Add("San Juan de Sabinas", new Point(550, 160));
+            cityPositions.Add("Torreón", new Point(380, 520));
+            cityPositions.Add("Matamoros", new Point(420, 530));
+            cityPositions.Add("Francisco I. Madero", new Point(435, 490));
+            cityPositions.Add("Viesca", new Point(410, 600));
+            cityPositions.Add("Parras de la Fuente", new Point(520, 570));
+            cityPositions.Add("General Cepeda", new Point(600, 560));
+            cityPositions.Add("Saltillo", new Point(680, 630));
+            cityPositions.Add("Ramos Arizpe", new Point(650, 580));
+            cityPositions.Add("Arteaga", new Point(720, 650));
+            cityPositions.Add("Castaños", new Point(685, 340));
+        }
+
+        private void DibujarMunicipio(Graphics g, string nombre, float x, float y)
+        {
+            g.FillEllipse(Brushes.Blue, x, y, 10, 10); // Dibuja un punto azul
+            g.DrawString(nombre, new Font("Arial", 8), Brushes.Black, x + 10, y); // Escribe el nombre
         }
 
         private void LlenarComboBox()
         {
             cmbCityoforigin.Items.AddRange(new string[]
     {
-        "Monclova", "Frontera", "Castaños", "Saltillo", "Torreón", "Piedras Negras",
-        "Ramos Arizpe", "Parras de la Fuente", "Sabinas", "Acuña", "San Pedro",
-        "Múzquiz", "Nava"
+        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Ciénegas","Escobedo","Francisco I Madero," +
+        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jiménez", "Juárez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
+        "Múzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
+        "Saltillo", "San Buenaventura", "San Juan De Sabinas", "San Pedro", "Sabinas", "Sacramento", "Sierra Mojada",
+        "Torreón", "Viesca", "Villa Unión", "Zaragoza"
     });
             cmbDestinationcity.Items.AddRange(new string[]
             {
-        "Monclova", "Frontera", "Castaños", "Saltillo", "Torreón", "Piedras Negras",
-        "Ramos Arizpe", "Parras de la Fuente", "Sabinas", "Acuña", "San Pedro",
-        "Múzquiz", "Nava"
+        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Ciénegas","Escobedo","Francisco I Madero," +
+        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jiménez", "Juárez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
+        "Múzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
+        "Saltillo", "San Buenaventura", "San Juan De Sabinas", "San Pedro", "Sabinas", "Sacramento", "Sierra Mojada",
+        "Torreón", "Viesca", "Villa Unión", "Zaragoza"
             });
         }
 
@@ -84,11 +143,24 @@ namespace CaminomascortoMonclova
             Pen penCorto = new Pen(Color.Green, 3); // Línea para el camino más corto
             Pen penLargo = new Pen(Color.Red, 3);   // Línea para el camino más largo
 
-            // Dibujar las ciudades como puntos
-            foreach (var city in cityPositions)
+            try
             {
-                g.FillEllipse(Brushes.Blue, city.Value.X - 5, city.Value.Y - 5, 10, 10);
-                g.DrawString(city.Key, this.Font, Brushes.Black, city.Value.X + 10, city.Value.Y - 10);
+                // Dibujar las ciudades como puntos
+                foreach (var city in cityPositions)
+                {
+                    if (city.Value == null)
+                    {
+                        Console.WriteLine($"La ciudad {city.Key} tiene una posición nula.");
+                        continue; // Omite esta ciudad si la posición es nula
+                    }
+
+                    g.FillEllipse(Brushes.Blue, city.Value.X - 5, city.Value.Y - 5, 10, 10);
+                    g.DrawString(city.Key, this.Font ?? new Font("Arial", 8), Brushes.Black, city.Value.X + 10, city.Value.Y - 10);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al dibujar las ciudades: {ex.Message}");
             }
 
             // Dibujar el camino más corto (en verde)
@@ -141,7 +213,7 @@ namespace CaminomascortoMonclova
                 }
 
                 // Forzar la actualización del mapa
-                picMap.Invalidate();
+                panelMap.Invalidate();
             }
         }
 
@@ -175,7 +247,7 @@ namespace CaminomascortoMonclova
                 caminoMasCorto = null;
 
                 // Forzar la actualización del mapa
-                picMap.Invalidate();
+                panelMap.Invalidate();
             }
         }
 
