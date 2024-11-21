@@ -1,18 +1,18 @@
 using System.Drawing;
+using System.IO;
 
 namespace CaminomascortoMonclova
 {
     public partial class Form1 : Form
     {
         private Dictionary<string, Point> cityPositions = new Dictionary<string, Point>();
-        Dictionary<string, List<Tuple<string, int>>> graph;
-        List<string> caminoMasCorto;
-        List<string> caminoMasLargo;
+        private Dictionary<string, List<Tuple<string, int>>> graph = new Dictionary<string, List<Tuple<string, int>>>(); // Inicializamos graph
+        private List<string> caminoMasCorto;
+        private List<string> caminoMasLargo;
 
         public Form1()
         {
             InitializeComponent();
-            InicializarGrafo();
             LlenarComboBox();
             InicializarMapa();
 
@@ -24,90 +24,77 @@ namespace CaminomascortoMonclova
             btnCalculateLongest.Click += btnCalculateLongest_Click;
         }
 
-        private void InicializarGrafo()
+
+
+        public void CargarConexiones(string archivo)
         {
-            graph = new Dictionary<string, List<Tuple<string, int>>>()
-    {
-        { "Monclova", new List<Tuple<string, int>>() { new Tuple<string, int>("Frontera", 7), new Tuple<string, int>("Castaños", 10), new Tuple<string, int>("Saltillo", 150), new Tuple<string, int>("Torreón", 220), new Tuple<string, int>("Sabinas", 110),new Tuple<string, int>("San Pedro" , 380) } },
-        { "Frontera", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 7), new Tuple<string, int>("Castaños", 17), new Tuple<string, int>("Saltillo", 130), new Tuple<string, int>("Piedras Negras", 200) } },
-        { "Castaños", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 10), new Tuple<string, int>("Frontera", 17), new Tuple<string, int>("Saltillo", 160) } },
-        { "Saltillo", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 150), new Tuple<string, int>("Frontera", 130), new Tuple<string, int>("Castaños", 160), new Tuple<string, int>("Ramos Arizpe", 20), new Tuple<string, int>("Parras de la Fuente", 130) } },
-        { "Torreón", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 220), new Tuple<string, int>("Parras de la Fuente", 120), new Tuple<string, int>("San Pedro", 50) } },
-        { "Piedras Negras", new List<Tuple<string, int>>() { new Tuple<string, int>("Frontera", 200), new Tuple<string, int>("Sabinas", 100), new Tuple<string, int>("Acuña", 90) } },
-        { "Ramos Arizpe", new List<Tuple<string, int>>() { new Tuple<string, int>("Saltillo", 20) } },
-        { "Parras de la Fuente", new List<Tuple<string, int>>() { new Tuple<string, int>("Saltillo", 130), new Tuple<string, int>("Torreón", 120) } },
-        { "Sabinas", new List<Tuple<string, int>>() { new Tuple<string, int>("Monclova", 110), new Tuple<string, int>("Piedras Negras", 100), new Tuple<string, int>("Múzquiz", 70) } },
-        { "Acuña", new List<Tuple<string, int>>() { new Tuple<string, int>("Piedras Negras", 90) } },
-        { "San Pedro", new List<Tuple<string, int>>() { new Tuple<string, int>("Torreón", 50) } },
-        { "Múzquiz", new List<Tuple<string, int>>() { new Tuple<string, int>("Sabinas", 70), new Tuple<string, int>("Nava", 80) } },
-        { "Nava", new List<Tuple<string, int>>() { new Tuple<string, int>("Múzquiz", 80) } },
-        { "Allende", new List<Tuple<string, int>>() { new Tuple<string, int>("Nueva Rosita", 50), new Tuple<string, int>("Morelos", 40) } },
-        { "Morelos", new List<Tuple<string, int>>() { new Tuple<string, int>("Nueva Rosita", 60), new Tuple<string, int>("Allende", 40) } },
-        { "Villa Unión", new List<Tuple<string, int>>() { new Tuple<string, int>("General Cepeda", 30), new Tuple<string, int>("Arteaga", 40) } },
-        { "General Cepeda", new List<Tuple<string, int>>() { new Tuple<string, int>("Villa Unión", 30), new Tuple<string, int>("Arteaga", 20) } },
-        { "Arteaga", new List<Tuple<string, int>>() { new Tuple<string, int>("Villa Unión", 40), new Tuple<string, int>("General Cepeda", 20) } },
-        { "Matamoros", new List<Tuple<string, int>>() { new Tuple<string, int>("San Buenaventura", 50), new Tuple<string, int>("Viesca", 60) } },
-        { "San Buenaventura", new List<Tuple<string, int>>() { new Tuple<string, int>("Matamoros", 50), new Tuple<string, int>("Viesca", 40) } },
-        { "Viesca", new List<Tuple<string, int>>() { new Tuple<string, int>("Matamoros", 60), new Tuple<string, int>("San Buenaventura", 40) } },
-        { "Cuatro Ciénegas", new List<Tuple<string, int>>() { new Tuple<string, int>("Ocampo", 30), new Tuple<string, int>("Zaragoza", 40) } },
-        { "Ocampo", new List<Tuple<string, int>>() { new Tuple<string, int>("Cuatro Ciénegas", 30), new Tuple<string, int>("Zaragoza", 20) } },
-        { "Zaragoza", new List<Tuple<string, int>>() { new Tuple<string, int>("Cuatro Ciénegas", 40), new Tuple<string, int>("Ocampo", 20) } },
-        { "Hidalgo", new List<Tuple<string, int>>() { new Tuple<string, int>("Jiménez", 50), new Tuple<string, int>("Abasolo", 60) } },
-        { "Jiménez", new List<Tuple<string, int>>() { new Tuple<string, int>("Hidalgo", 50), new Tuple<string, int>("Abasolo", 40) } },
-        { "Abasolo", new List<Tuple<string, int>>() { new Tuple<string, int>("Hidalgo", 60), new Tuple<string, int>("Jiménez", 40) } },
-        { "Candela", new List<Tuple<string, int>>() { new Tuple<string, int>("Escobedo", 30), new Tuple<string, int>("Guerrero", 40) } },
-        { "Escobedo", new List<Tuple<string, int>>() { new Tuple<string, int>("Candela", 30), new Tuple<string, int>("Guerrero", 20) } },
-        { "Guerrero", new List<Tuple<string, int>>() { new Tuple<string, int>("Candela", 40), new Tuple<string, int>("Escobedo", 20) } },
-        { "Juárez", new List<Tuple<string, int>>() { new Tuple<string, int>("Lamadrid", 30), new Tuple<string, int>("Sacramento", 40) } },
-        { "Lamadrid", new List<Tuple<string, int>>() { new Tuple<string, int>("Juárez", 30), new Tuple<string, int>("Sacramento", 20) } },
-        { "Sacramento", new List<Tuple<string, int>>() { new Tuple<string, int>("Juárez", 40), new Tuple<string, int>("Lamadrid", 20) } },
-        { "Sierra Mojada", new List<Tuple<string, int>>() { new Tuple<string, int>("Progreso", 30), new Tuple<string, int>("Francisco I Madero", 40) } },
-        { "Progreso", new List<Tuple<string, int>>() { new Tuple<string, int>("Sierra Mojada", 30), new Tuple<string, int>("Francisco I Madero", 20) } },
-        { "Francisco I Madero", new List<Tuple<string, int>>() { new Tuple<string, int>("Sierra Mojada", 40), new Tuple<string, int>("Progreso", 20) } },
-        { "San Juan De Sabinas", new List<Tuple<string, int>>() { new Tuple<string, int>("Nadadores", 30) } },
-        { "Nadadores", new List<Tuple<string, int>>() { new Tuple<string, int>("San Juan De Sabinas", 30) } }
-    };
+            var lineas = File.ReadAllLines(archivo);
+
+            foreach (var linea in lineas)
+            {
+                var datos = linea.Split(',');
+                var ciudad1 = datos[0];
+                var ciudad2 = datos[1];
+                var distancia = int.Parse(datos[2]);
+
+                Console.WriteLine($"Agregando conexión entre {ciudad1} y {ciudad2} con distancia {distancia}");
+                AgregarConexion(ciudad1, ciudad2, distancia);
+            }
+
+        }
+        private void AgregarConexion(string ciudad1, string ciudad2, int distancia)
+        {
+            if (!graph.ContainsKey(ciudad1))
+                graph[ciudad1] = new List<Tuple<string, int>>();
+            if (!graph.ContainsKey(ciudad2))
+                graph[ciudad2] = new List<Tuple<string, int>>();
+
+            // Evitar duplicados de conexiones entre ciudades
+            if (!graph[ciudad1].Any(c => c.Item1 == ciudad2))
+                graph[ciudad1].Add(new Tuple<string, int>(ciudad2, distancia));
+            if (!graph[ciudad2].Any(c => c.Item1 == ciudad1))
+                graph[ciudad2].Add(new Tuple<string, int>(ciudad1, distancia));
         }
 
         private void InicializarMapa()
         {
             cityPositions.Add("Acuña", new Point(560, 37));
-            cityPositions.Add("Jiménez", new Point(695, 50));
+            cityPositions.Add("Jimenez", new Point(695, 50));
             cityPositions.Add("Piedras Negras", new Point(750, 70));
             cityPositions.Add("Zaragoza", new Point(580, 80));
             cityPositions.Add("Nava", new Point(780, 110));
             cityPositions.Add("Morelos", new Point(628, 125));
             cityPositions.Add("Allende", new Point(720, 145));
-            cityPositions.Add("Villa Unión", new Point(710, 175));
+            cityPositions.Add("Villa Union", new Point(710, 175));
             cityPositions.Add("Guerrero", new Point(800, 160));
             cityPositions.Add("Hidalgo", new Point(835, 185));
-            cityPositions.Add("Juárez", new Point(760, 210));
+            cityPositions.Add("Juarez", new Point(760, 210));
             cityPositions.Add("Progreso", new Point(755, 245));
-            cityPositions.Add("Ocampo", new Point(370, 170));
-            cityPositions.Add("Sierra Mojada", new Point(350, 290));
-            cityPositions.Add("San Buenaventura", new Point(495, 340));
-            cityPositions.Add("Lamadrid", new Point(565, 230));
-            cityPositions.Add("Sacramento", new Point(385, 390));
-            cityPositions.Add("Cuatro Ciénegas", new Point(500, 250));
-            cityPositions.Add("Nadadores", new Point(515, 330));
-            cityPositions.Add("San Pedro", new Point(415, 430));
+            cityPositions.Add("Ocampo", new Point(390, 170));
+            cityPositions.Add("Sierra Mojada", new Point(315, 240));
+            cityPositions.Add("San Buenaventura", new Point(500, 190));
+            cityPositions.Add("Lamadrid", new Point(550, 280));
+            cityPositions.Add("Sacramento", new Point(570, 320));
+            cityPositions.Add("Cuatro Cienegas", new Point(480, 370));
+            cityPositions.Add("Nadadores", new Point(565, 270));
+            cityPositions.Add("San Pedro", new Point(415, 390));
             cityPositions.Add("Monclova", new Point(688, 310));
-            cityPositions.Add("Frontera", new Point(620, 305));
+            cityPositions.Add("Frontera", new Point(612, 305));
             cityPositions.Add("Escobedo", new Point(680, 260));
             cityPositions.Add("Abasolo", new Point(668, 280));
             cityPositions.Add("Candela", new Point(770, 310));
             cityPositions.Add("Sabinas", new Point(625, 180));
-            cityPositions.Add("Múzquiz", new Point(540, 120));
+            cityPositions.Add("Muzquiz", new Point(540, 120));
             cityPositions.Add("San Juan de Sabinas", new Point(550, 160));
-            cityPositions.Add("Torreón", new Point(380, 520));
-            cityPositions.Add("Matamoros", new Point(420, 530));
-            cityPositions.Add("Francisco I. Madero", new Point(435, 490));
-            cityPositions.Add("Viesca", new Point(410, 600));
-            cityPositions.Add("Parras de la Fuente", new Point(520, 570));
-            cityPositions.Add("General Cepeda", new Point(600, 560));
-            cityPositions.Add("Saltillo", new Point(680, 630));
-            cityPositions.Add("Ramos Arizpe", new Point(650, 580));
-            cityPositions.Add("Arteaga", new Point(720, 650));
+            cityPositions.Add("Torreon", new Point(365, 520));
+            cityPositions.Add("Matamoros", new Point(400, 475));
+            cityPositions.Add("Francisco I. Madero", new Point(335, 320));
+            cityPositions.Add("Viesca", new Point(445, 540));
+            cityPositions.Add("Parras de la Fuente", new Point(520, 530));
+            cityPositions.Add("General Cepeda", new Point(650, 500));
+            cityPositions.Add("Saltillo", new Point(680, 580));
+            cityPositions.Add("Ramos Arizpe", new Point(690, 430));
+            cityPositions.Add("Arteaga", new Point(810, 560));
             cityPositions.Add("Castaños", new Point(685, 340));
         }
 
@@ -121,19 +108,19 @@ namespace CaminomascortoMonclova
         {
             cmbCityoforigin.Items.AddRange(new string[]
     {
-        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Ciénegas","Escobedo","Francisco I Madero," +
-        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jiménez", "Juárez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
-        "Múzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
+        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Cienegas","Escobedo","Francisco I Madero",
+        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jimenez", "Juarez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
+        "Muzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
         "Saltillo", "San Buenaventura", "San Juan De Sabinas", "San Pedro", "Sabinas", "Sacramento", "Sierra Mojada",
-        "Torreón", "Viesca", "Villa Unión", "Zaragoza"
+        "Torreon", "Viesca", "Villa Union", "Zaragoza"
     });
             cmbDestinationcity.Items.AddRange(new string[]
             {
-        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Ciénegas","Escobedo","Francisco I Madero," +
-        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jiménez", "Juárez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
-        "Múzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
+        "Abasolo", "Acuña", "Allende", "Arteaga", "Candela", "Castaños", "Cuatro Cienegas","Escobedo","Francisco I Madero",
+        "Frontera", "General Cepeda", "Guerrero", "Hidalgo", "Jimenez", "Juarez", "Lamadrid", "Matamoros", "Monclova", "Morelos",
+        "Muzquiz", "Nadadores", "Nava","Ocampo", "Parras de la Fuente", "Piedras Negras", "Progreso", "Ramos Arizpe",
         "Saltillo", "San Buenaventura", "San Juan De Sabinas", "San Pedro", "Sabinas", "Sacramento", "Sierra Mojada",
-        "Torreón", "Viesca", "Villa Unión", "Zaragoza"
+        "Torreon", "Viesca", "Villa Union", "Zaragoza"
             });
         }
 
@@ -163,7 +150,7 @@ namespace CaminomascortoMonclova
                 MessageBox.Show($"Error al dibujar las ciudades: {ex.Message}");
             }
 
-            // Dibujar el camino más corto (en verde)
+            // Dibujar el camino más corto (en verde) si está definido
             if (caminoMasCorto != null && caminoMasCorto.Count > 1)
             {
                 for (int i = 0; i < caminoMasCorto.Count - 1; i++)
@@ -174,7 +161,7 @@ namespace CaminomascortoMonclova
                 }
             }
 
-            // Dibujar el camino más largo (en rojo)
+            // Dibujar el camino más largo (en rojo) si está definido
             if (caminoMasLargo != null && caminoMasLargo.Count > 1)
             {
                 for (int i = 0; i < caminoMasLargo.Count - 1; i++)
@@ -186,6 +173,7 @@ namespace CaminomascortoMonclova
             }
         }
 
+
         private void btnCalculateShortest_Click(object sender, EventArgs e)
         {
             string origen = cmbCityoforigin.SelectedItem?.ToString();
@@ -193,29 +181,28 @@ namespace CaminomascortoMonclova
 
             if (origen != null && destino != null)
             {
+                // Verificar que las ciudades estén en el grafo
+                if (!graph.ContainsKey(origen) || !graph.ContainsKey(destino))
+                {
+                    txtresult.Text = "Alguna de las ciudades seleccionadas no existe en el grafo.";
+                    return;
+                }
+
                 var previous = new Dictionary<string, string>();
-
-                // Obtener el camino más corto usando Dijkstra
                 int distanciaCorta = Dijkstra(graph, origen, destino, previous);
-                caminoMasCorto = ObtenerCamino(previous, origen, destino);
 
-                // Limpiar el camino más largo
+                // Obtener el camino más corto
+                caminoMasCorto = ObtenerCamino(previous, origen, destino);
                 caminoMasLargo = null;
 
-                // Actualizamos el resultado en el TextBox
-                if (caminoMasCorto != null && caminoMasCorto.Count > 0)
-                {
-                    txtresult.Text = $"El camino más corto de {origen} a {destino} es de {distanciaCorta} km";
-                }
-                else
-                {
-                    txtresult.Text = "No se encontró un camino entre las ciudades seleccionadas.";
-                }
+                txtresult.Text = caminoMasCorto != null
+                                 ? $"El camino más corto de {origen} a {destino} es de {distanciaCorta} km"
+                                 : "No se encontró un camino entre las ciudades seleccionadas.";
 
-                // Forzar la actualización del mapa
                 panelMap.Invalidate();
             }
         }
+
 
         private void btnCalculateLongest_Click(object sender, EventArgs e)
         {
@@ -291,6 +278,7 @@ namespace CaminomascortoMonclova
             {
                 string ciudadActual = camino[i];
                 string siguienteCiudad = camino[i + 1];
+
                 var conexion = graph[ciudadActual].FirstOrDefault(c => c.Item1 == siguienteCiudad);
                 if (conexion != null)
                 {
@@ -298,8 +286,9 @@ namespace CaminomascortoMonclova
                 }
                 else
                 {
-                    // Si no hay conexión directa, retorna una distancia inválida
-                    return 0;
+                    // Esto indica un error en el camino, no debería ocurrir si el grafo está bien construido
+                    Console.WriteLine($"Error: No se encontró una conexión directa entre {ciudadActual} y {siguienteCiudad}");
+                    return -1;
                 }
             }
             return distancia;
@@ -307,59 +296,85 @@ namespace CaminomascortoMonclova
 
         private List<string> ObtenerCamino(Dictionary<string, string> previous, string origen, string destino)
         {
-            var camino = new List<string>();
-            string actual = destino;
+            var path = new List<string>();
+            string step = destino;
 
-            while (actual != null && actual != origen)
+            // Reconstrucción del camino desde el destino al origen
+            while (step != null && step != origen)
             {
-                camino.Insert(0, actual);
-                previous.TryGetValue(actual, out actual);
+                path.Add(step);
+                if (!previous.ContainsKey(step)) // Verificación de que haya un camino válido
+                    return null;
+                step = previous[step];
             }
 
-            if (actual == origen)
-            {
-                camino.Insert(0, origen);
-                return camino;
-            }
+            if (step == null) // Si no encontramos el origen, no hay camino
+                return null;
 
-            return new List<string>(); // Retorna una lista vacía si no se encontró el camino
+            path.Add(origen); // Agregar el origen al camino
+            path.Reverse(); // Invertir el camino para que vaya del origen al destino
+            return path;
         }
 
-        private int Dijkstra(Dictionary<string, List<Tuple<string, int>>> graph, string start, string end, Dictionary<string, string> previous)
+        private int Dijkstra(Dictionary<string, List<Tuple<string, int>>> graph, string origen, string destino, Dictionary<string, string> previous)
         {
-            var distances = new Dictionary<string, int>();
-            var nodes = new List<string>();
+            var distancias = new Dictionary<string, int>();
+            var visited = new HashSet<string>();
+            var queue = new SortedSet<(int distance, string city)>();
 
-            foreach (var vertex in graph)
+            foreach (var ciudad in graph.Keys)
             {
-                distances[vertex.Key] = vertex.Key == start ? 0 : int.MaxValue;
-                nodes.Add(vertex.Key);
+                distancias[ciudad] = int.MaxValue;
             }
+            distancias[origen] = 0;
+            queue.Add((0, origen));
 
-            while (nodes.Count != 0)
+            previous.Clear();
+
+            while (queue.Count > 0)
             {
-                nodes.Sort((x, y) => distances[x].CompareTo(distances[y]));
-                var smallest = nodes[0];
-                nodes.RemoveAt(0);
+                var (distanciaActual, ciudadActual) = queue.Min;
+                queue.Remove(queue.Min);
 
-                if (smallest == end)
-                    return distances[smallest];  // Camino más corto encontrado
+                if (visited.Contains(ciudadActual))
+                    continue;
 
-                if (distances[smallest] == int.MaxValue)
-                    break;
+                visited.Add(ciudadActual);
 
-                foreach (var neighbor in graph[smallest])
+                if (ciudadActual == destino)
+                    return distancias[destino];
+
+                foreach (var (vecino, peso) in graph[ciudadActual])
                 {
-                    int alt = distances[smallest] + neighbor.Item2;
-                    if (alt < distances[neighbor.Item1])
+                    int nuevaDistancia = distanciaActual + peso;
+                    if (nuevaDistancia < distancias[vecino])
                     {
-                        distances[neighbor.Item1] = alt;
-                        previous[neighbor.Item1] = smallest; // Guardamos el nodo anterior
+                        // Eliminar cualquier distancia anterior para evitar duplicados
+                        queue.Remove((distancias[vecino], vecino));
+
+                        distancias[vecino] = nuevaDistancia;
+                        previous[vecino] = ciudadActual;
+
+                        // Añadir la nueva distancia actualizada
+                        queue.Add((nuevaDistancia, vecino));
                     }
                 }
             }
 
-            return distances[end];
+            return distancias[destino] == int.MaxValue ? -1 : distancias[destino];
+        }
+
+
+        private void btnCargarArchivo_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string archivo = openFileDialog.FileName;
+                CargarConexiones(archivo);
+                MessageBox.Show("Archivo cargado correctamente.");
+            }
         }
     }
 }

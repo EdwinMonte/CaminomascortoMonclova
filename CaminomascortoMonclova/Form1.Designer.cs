@@ -37,6 +37,7 @@
             label3 = new Label();
             btnCalculateLongest = new Button();
             panelMap = new Panel();
+            btnCargarArchivo = new Button();
             SuspendLayout();
             // 
             // cmbCityoforigin
@@ -115,11 +116,22 @@
             panelMap.Size = new Size(903, 769);
             panelMap.TabIndex = 9;
             // 
+            // btnCargarArchivo
+            // 
+            btnCargarArchivo.Location = new Point(34, 349);
+            btnCargarArchivo.Name = "btnCargarArchivo";
+            btnCargarArchivo.Size = new Size(183, 51);
+            btnCargarArchivo.TabIndex = 10;
+            btnCargarArchivo.Text = "Cargar Archivo";
+            btnCargarArchivo.UseVisualStyleBackColor = true;
+            btnCargarArchivo.Click += btnCargarArchivo_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1225, 838);
+            Controls.Add(btnCargarArchivo);
             Controls.Add(panelMap);
             Controls.Add(btnCalculateLongest);
             Controls.Add(label3);
@@ -146,5 +158,6 @@
         private Label label3;
         private Button btnCalculateLongest;
         private Panel panelMap;
+        private Button btnCargarArchivo;
     }
 }
